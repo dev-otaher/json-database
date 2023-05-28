@@ -1,46 +1,33 @@
 package server;
 
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
 
-    static boolean isIndexInRange(int index) {
-        return index >= 0 && index <= 99;
-    }
-
     public static void main(String[] args) {
-        final String[] db = new String[100];
-        Arrays.fill(db, "");
+        Database database = new Database();
         Scanner scanner = new Scanner(System.in);
         String input;
-        do {
+        while (true) {
             input = scanner.nextLine();
-            if (input.startsWith("set")) {
-                int index = Integer.parseInt(input.split(" ")[1]) - 1;
-                if (isIndexInRange(index)) {
-                    String toBeSavedText = input.replaceFirst("set ", "").replaceFirst(index + " ", "");
-                    db[index] = toBeSavedText;
-                    System.out.println("OK");
-                } else {
-                    System.out.println("ERROR");
-                }
-            } else if (input.startsWith("get")) {
-                int index = Integer.parseInt(input.split(" ")[1]) - 1;
-                if (!isIndexInRange(index) || db[index].isBlank()) {
-                    System.out.println("ERROR");
-                } else {
-                    System.out.println(db[index]);
-                }
-            } else if (input.startsWith("delete")) {
-                int index = Integer.parseInt(input.split(" ")[1]) - 1;
-                if (isIndexInRange(index)) {
-                    db[index] = "";
-                    System.out.println("OK");
-                } else {
-                    System.out.println("ERROR");
-                }
+            if (input.equals("exit")) {
+                break;
             }
-        } while (!"exit".equals(input));
+            String[] tokens = input.split(" ", 3);
+            String command = tokens[0];
+            int index = Integer.parseInt(tokens[1]) - 1;
+            switch (command) {
+                case "set":
+                    String text = tokens[2];
+                    System.out.println(database.set(index, text) ? "OK" : "ERROR");
+                    break;
+                case "get":
+                    System.out.println(database.get(index));
+                    break;
+                case "delete":
+                    System.out.println(database.delete(index) ? "OK" : "ERROR");
+                    break;
+            }
+        }
     }
 }
