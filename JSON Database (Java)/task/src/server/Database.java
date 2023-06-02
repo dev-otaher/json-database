@@ -5,8 +5,8 @@ import java.util.Arrays;
 public class Database {
     private final String[] db;
 
-    public Database() {
-        db = new String[100];
+    public Database(int dbSize) {
+        db = new String[dbSize];
         Arrays.fill(db, "");
     }
 
