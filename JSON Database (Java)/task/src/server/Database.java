@@ -1,37 +1,25 @@
 package server;
 
-import java.util.Arrays;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 public class Database {
-    private final String[] db;
+    private final JsonElement db;
 
-    public Database(int dbSize) {
-        db = new String[dbSize];
-        Arrays.fill(db, "");
+    public Database() {
+        db = new JsonObject();
     }
 
-    private boolean isValidIndex(int index) {
-        return index >= 0 && index <= 99;
+    public String get(String key) {
+        JsonElement keyElement = db.getAsJsonObject().get(key);
+        return (keyElement == null) ? null : keyElement.getAsString();
     }
 
-    public String get(int index) {
-        return !isValidIndex(index) || db[index].isBlank() ? "ERROR" : db[index];
+    public void set(String key, String value) {
+        db.getAsJsonObject().addProperty(key, value);
     }
 
-    public boolean set(int index, String text) {
-        if (isValidIndex(index)) {
-            db[index] = text;
-            return true;
-        }
-        return false;
+    public boolean delete(String key) {
+        return db.getAsJsonObject().remove(key) != null;
     }
-
-    public boolean delete(int index) {
-        if (isValidIndex(index)) {
-            db[index] = "";
-            return true;
-        }
-        return false;
-    }
-
 }
